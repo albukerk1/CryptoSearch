@@ -1,76 +1,83 @@
-# MVVM Example
+# CryptoSearch – App de Cotação de Criptomoedas
 
-MVVM Example is a Flutter project demonstrating the MVVM architecture with Bloc for state management. The app features user authentication, profile management, order tracking, and integration with RESTful APIs. It is structured to maintain a clean and scalable architecture.
+Este é um aplicativo desenvolvido em Flutter que exibe uma lista de cotações de criptomoedas consumindo a API da **CoinMarketCap**. O projeto segue as boas práticas de desenvolvimento e utiliza a arquitetura **MVVM** (Model-View-ViewModel) para uma organização clara e escalável do código.
 
-![image](https://github.com/user-attachments/assets/20824875-060a-4626-ae09-9db98375cdf7)
+---
 
+## 🏛️ Arquitetura do Projeto
 
-## Features
-- **User Authentication**
-- **User Profile Management**
-- **Order Management** (Complex data such as orders, items, and purchase details)
-- **Google Maps Integration**
-- **Interconnected Screens** (State updates across multiple views)
-- **Unit Testing with TDD Approach**
+O aplicativo foi estruturado seguindo o padrão **MVVM**, dividindo as responsabilidades da seguinte forma:
 
-## Project Architecture
-This project follows the MVVM (Model-View-ViewModel) pattern with a modular folder structure:
+-   **UI (View)**: Camada responsável pela exibição dos dados e interação com o usuário. É composta pelas telas e widgets do Flutter.
+-   **ViewModel**: Atua como um *State Manager*, contendo a lógica da interface do usuário, gerenciando os estados (como carregamento, sucesso e erro) e preparando os dados para a View.
+-   **Repository**: Responsável por abstrair a origem dos dados. Ele se comunica com o `DataSource` para obter as informações e as entrega para o `ViewModel` em formato de Entidades.
+-   **DataSource**: A camada de comunicação direta com a API da CoinMarketCap. Realiza as chamadas HTTP e trata as respostas.
 
-```
-configs/
-  assets/
-  schema_database/
-  enviroment/
-  injector_container/
-core/
-data/
-  datasources/
-  repositories/
-domain/
-  entities/
-routing/
-ui/
-  feature_name/
-    pages/
-    view_models/
-    widgets/
-utils/
-```
+---
 
-### MVVM Structure
-- **Data Layer:** Handles API calls, local storage, and repositories.
-- **Domain Layer:** Contains business logic and entities.
-- **UI Layer:** Displays data and interacts with ViewModels.
+## ✨ Funcionalidades
 
-## Libraries & Tools
+O aplicativo implementa os seguintes requisitos:
 
-### State Management
-- **Bloc** - Handles business logic and state management.
+-   **Listagem de Criptomoedas**: Exibe uma lista de moedas com sua sigla, nome e cotação em USD e BRL.
+-   **Atualização de Dados**: Permite atualizar as informações através de um botão de "requisitar" e da funcionalidade *pull-to-refresh* (puxar para atualizar).
+-   **Indicador de Carregamento**: Mostra um indicador visual (`Processing Indicator`) sempre que uma busca por dados está em andamento.
+-   **Busca Múltipla**: Um campo de pesquisa permite buscar múltiplas criptomoedas simultaneamente, separando suas siglas por vírgula (ex: `BTC,ETH,SOL`).
+-   **Valores Padrão**: Caso nenhuma criptomoeda seja pesquisada, o app busca uma lista pré-definida de moedas, incluindo BTC, ETH, SOL, ADA, entre outras.
+-   **Tela de Detalhes**: Ao clicar em uma criptomoeda da lista, uma página é exibida com informações adicionais, como nome, símbolo, data de adição e preços formatados.
 
-### HTTP & Networking
-- **Dio** - A powerful HTTP client for handling API requests.
-- **Flutter Dotenv** - Manages environment variables.
+---
 
-### Dependency Injection
-- **GetIt** - A service locator for dependency injection.
+## 🚀 Como Executar o Projeto
 
-### Storage & Database
-- **Shared Preferences** - Key-value storage for lightweight persistence.
-- **Sqflite** - SQLite plugin for Flutter.
+Siga os passos abaixo para configurar e executar o aplicativo em sua máquina local.
 
-### UI Components
-- **Font Awesome Flutter** - A library for scalable vector icons.
-- **Intl** - Provides internationalization support.
+### **Pré-requisitos**
 
-### Testing & Code Quality
-- **Flutter Lints** - Ensures best practices and clean code.
-- **Mockito** - Enables unit testing by mocking dependencies.
+-   Ter o **Flutter SDK** instalado.
+-   Uma IDE configurada para o desenvolvimento com Flutter (VS Code ou Android Studio).
+-   Uma conta no site da **[CoinMarketCap API](https://pro.coinmarketcap.com/signup)** para obter uma chave de API.
 
-## TODO
+### **Passo 1: Obter a API Key**
 
-## Getting Started
-1. Clone the repository.
-2. Run `flutter pub get` to install dependencies.
-3. Configure environment variables using `.env` file.
-4. Run the app using `flutter run`.
+1.  Acesse **[https://pro.coinmarketcap.com/signup](https://pro.coinmarketcap.com/signup)** e crie uma conta (o plano gratuito é suficiente).
+2.  Após o login, navegue até o seu *dashboard* e copie a sua **API Key**.
 
+### **Passo 2: Clonar e Configurar o Projeto**
+
+1.  Clone este repositório para a sua máquina:
+    ```bash
+    git clone https://github.com/albukerk1/CryptoSearch.git
+    cd CryptoSearch
+    ```
+
+2.  Abra o projeto na sua IDE e navegue até o arquivo:
+    `lib/core/library/constants.dart`
+
+3.  Cole a sua API Key na variável `X-CMC_PRO_API_KEY`:
+    ```dart
+    // lib/core/library/service/http_service.dart
+
+    // (...)
+    Future<void> _changeDioOptionsAsync() async {
+    _dio.options.headers.clear();
+    _dio.options.headers.addAll({
+      'X-CMC_PRO_API_KEY': 'SUA_CHAVE_API_AQUI',
+      });
+    }
+    // (...)
+    ```
+
+### **Passo 3: Instalar Dependências e Executar**
+
+1.  Pelo terminal, na raiz do projeto, instale as dependências:
+    ```bash
+    flutter pub get
+    ```
+
+2.  Conecte um emulador ou dispositivo físico e execute o aplicativo:
+    ```bash
+    flutter run
+    ```
+
+Pronto! O aplicativo deverá ser compilado e executado.
